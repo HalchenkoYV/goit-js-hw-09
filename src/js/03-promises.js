@@ -3,9 +3,6 @@ import Notiflix from 'notiflix';
 
 
 const form = document.forms[0];
-const delay = form.querySelector('input[name="delay"]');
-const step = form.querySelector('input[name="step"]');
-const amount = form.querySelector('input[name="amount"]');
 const button = document.querySelector('button');
 
 
@@ -27,10 +24,13 @@ function createPromise(position, delay) {
       }, delay);
   });
 }
-
-
 function callPromises(event) {
   event.preventDefault();
+  // 
+  const {
+    elements: { delay, step, amount }
+  } = event.currentTarget;
+  // 
   let basicTime = Number(delay.value);
 
   for (let i = 1; i <= amount.value; i += 1) {
@@ -43,9 +43,9 @@ function callPromises(event) {
       .catch(({ position, delay }) => {
         console.log(`❌ Rejected promise ${position} in ${delay}ms`);
         Notiflix.Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
-      });
-      
+      }); 
     }
+
     else {
       basicTime = basicTime+Number(step.value);
       createPromise(i, basicTime)
@@ -60,10 +60,10 @@ function callPromises(event) {
       }
     }
   basicTime = 0;
+  form.reset();
 }
 
 
-button.addEventListener("click", callPromises);// submit почему-то не работает.
-
+form.addEventListener("submit", callPromises);
 
 
